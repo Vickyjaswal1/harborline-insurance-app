@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in | Harborline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/login.css" />
+</head>
+<body class="bg-[var(--color-paper)] text-[color:var(--color-ink)] font-[family-name:var(--font-body)]">
+  <!-- Moving background: three soft colour orbs drifting behind the page (decoration only) -->
+<div class="bg-scene" aria-hidden="true">
+  <span class="orb orb-1"></span>
+  <span class="orb orb-2"></span>
+  <span class="orb orb-3"></span>
+  <span class="wave wave-1"></span>
+  <span class="wave wave-2"></span>
+</div>
+
+  <header class="mx-auto max-w-6xl px-6 pt-8">
+    <a href="/" class="flex items-center gap-2 font-[family-name:var(--font-head)] text-2xl font-bold tracking-tight">
+      <span class="inline-block h-3 w-3 rounded-full bg-[var(--color-marigold)]"></span>
+      Harborline
+    </a>
+  </header>
+
+  <main class="mx-auto grid min-h-[80vh] max-w-6xl items-center gap-12 px-6 py-12 md:grid-cols-2">
+
+    <section>
+    <h1 class="font-[family-name:var(--font-head)] text-5xl font-bold leading-none tracking-tight md:text-6xl rise">
+          Cover that explains itself.
+      </h1>
+      <p class="mt-6 max-w-md text-lg text-[color:var(--color-muted)] rise" style="--d: 0.15s">
+          Get a car insurance quote and see, line by line, exactly why it costs what it does.
+      </p>
+    </section>
+
+    <section class="border-t-4 border-[color:var(--color-harbor)] bg-white/75 backdrop-blur-md p-8 shadow-sm rise" style="--d: 0.3s">
+
+        <div class="relative flex gap-6 border-b border-[color:var(--color-line)]" role="tablist">
+        <button id="tabLogin" class="tab" role="tab" aria-selected="true">Sign in</button>
+        <button id="tabSignup" class="tab" role="tab" aria-selected="false">Sign up</button>
+        <span id="tabIndicator" class="tab-indicator"></span>
+        </div>
+
+      <p id="formError" class="mt-4 text-sm text-red-700" role="alert"></p>
+
+      <form id="loginForm" class="mt-4">
+        <label class="block text-sm font-semibold">Email
+          <input id="loginEmail" type="email" required class="mt-1 w-full border border-[color:var(--color-line)] px-3 py-2 font-normal" />
+        </label>
+        <label class="mt-4 block text-sm font-semibold">Password
+          <input id="loginPassword" type="password" required class="mt-1 w-full border border-[color:var(--color-line)] px-3 py-2 font-normal" />
+        </label>
+        <button class="mt-6 w-full bg-[var(--color-harbor)] px-4 py-3 font-semibold text-white hover:bg-[var(--color-ink)]">Sign in</button>
+      </form>
+
+      <form id="signupForm" class="mt-4" hidden>
+        <label class="block text-sm font-semibold">Name
+          <input id="signupName" type="text" required class="mt-1 w-full border border-[color:var(--color-line)] px-3 py-2 font-normal" />
+        </label>
+        <label class="mt-4 block text-sm font-semibold">Email
+          <input id="signupEmail" type="email" required class="mt-1 w-full border border-[color:var(--color-line)] px-3 py-2 font-normal" />
+        </label>
+        <label class="mt-4 block text-sm font-semibold">Password
+          <input id="signupPassword" type="password" required class="mt-1 w-full border border-[color:var(--color-line)] px-3 py-2 font-normal" />
+        </label>
+        <button class="mt-6 w-full bg-[var(--color-harbor)] px-4 py-3 font-semibold text-white hover:bg-[var(--color-ink)]">Create account</button>
+      </form>
+
+    </section>
+  </main>
+
+  <script src="js/login.js"></script>
+  <script src="js/api.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Harborline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="bg-[var(--color-paper)] text-[color:var(--color-ink)] font-[family-name:var(--font-body)]">
+  <!-- Moving background: three soft colour orbs drifting behind the page (decoration only) -->
+<div class="bg-scene" aria-hidden="true">
+  <span class="orb orb-1"></span>
+  <span class="orb orb-2"></span>
+  <span class="orb orb-3"></span>
+  <span class="wave wave-1"></span>
+  <span class="wave wave-2"></span>
+</div>
+
+<!-- Blur only from medium screens up (md:). A blurred header makes the fixed bottom tab bar
+     stick to the header instead of the screen, which breaks it on phones.
+     "sticky top-0" keeps the header (logo, name, Sign out) pinned to the top while scrolling. -->
+<header class="sticky top-0 z-20 border-b border-[color:var(--color-line)] bg-white/90 md:bg-white/80 md:backdrop-blur-md">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <a href="/app.html" class="flex items-center gap-2 font-[family-name:var(--font-head)] text-xl font-bold tracking-tight">
+        <span class="inline-block h-3 w-3 rounded-full bg-[var(--color-marigold)]"></span>
+        Harborline
+      </a>
+            <!-- min-w-0 lets this side shrink; gap-3 saves space on phones -->
+      <div class="flex min-w-0 items-center gap-3 text-sm">
+        <!-- truncate cuts a long name short with "..." (phones only) -->
+        <span id="userName" class="max-w-[7rem] truncate text-[color:var(--color-muted)] sm:max-w-none"></span>
+        <!-- shrink-0: this button is never squeezed or pushed off screen -->
+        <button id="logoutBtn" class="shrink-0 whitespace-nowrap font-semibold text-[color:var(--color-harbor)] hover:underline">Sign out</button>
+      </div>
+    </div>
+
+    <nav class="nav fixed inset-x-0 bottom-0 z-10 flex border-t border-[color:var(--color-line)] bg-white md:static md:mx-auto md:max-w-6xl md:border-t-0 md:px-6" role="tablist">
+      <button class="nav-tab" role="tab" data-tab="quote" aria-selected="true">Quote</button>
+      <button class="nav-tab" role="tab" data-tab="policies" aria-selected="false">Policies</button>
+      <button class="nav-tab" role="tab" data-tab="claims" aria-selected="false">Claims</button>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-6 pb-28 pt-10 md:pb-12">
+    <section id="panel-quote">
+  <h1 class="font-[family-name:var(--font-head)] text-4xl font-bold tracking-tight">Get a quote</h1>
+  <p class="mt-2 text-[color:var(--color-muted)]">Move the sliders and watch the price explain itself.</p>
+
+  <div class="mt-8 grid gap-10 md:grid-cols-[1fr_380px]">
+
+    <form id="quoteForm" class="space-y-8">
+      <label class="block">
+        <span class="flex justify-between font-semibold">Driver age <output id="ageOut">35</output></span>
+        <input id="age" type="range" min="16" max="90" value="35" class="mt-2 w-full accent-[color:var(--color-harbor)]" />
+      </label>
+
+      <label class="block">
+        <span class="flex justify-between font-semibold">Traffic violations <output id="violationsOut">0</output></span>
+        <input id="violations" type="range" min="0" max="6" value="0" class="mt-2 w-full accent-[color:var(--color-harbor)]" />
+      </label>
+
+      <label class="block">
+        <span class="flex justify-between font-semibold">Miles per year <output id="mileageOut">12,000</output></span>
+        <input id="mileage" type="range" min="0" max="30000" step="500" value="12000" class="mt-2 w-full accent-[color:var(--color-harbor)]" />
+      </label>
+
+      <fieldset>
+        <legend class="font-semibold">Where do you park overnight?</legend>
+        <div class="mt-2 grid grid-cols-3 gap-3">
+          <label class="choice"><input type="radio" name="parking" value="garage" checked /><span>Garage</span></label>
+          <label class="choice"><input type="radio" name="parking" value="driveway" /><span>Driveway</span></label>
+          <label class="choice"><input type="radio" name="parking" value="street" /><span>Street</span></label>
+        </div>
+      </fieldset>
+
+      <button id="calcBtn" class="w-full bg-[var(--color-harbor)] px-4 py-3 font-semibold text-white hover:bg-[var(--color-ink)] disabled:opacity-60">Calculate my quote</button>
+    </form>
+
+    <aside class="receipt self-start md:sticky md:top-6" aria-live="polite">
+      <h2 class="font-[family-name:var(--font-head)] text-xl font-semibold">Your quote</h2>
+      <ul id="factors" class="mt-4"></ul>
+      <div class="receipt-total">
+        <span class="term" tabindex="0" data-tip="The price you pay for one year of cover.">Yearly premium</span>
+                <strong id="premium">&mdash;</strong>
+      </div>
+      <p id="decision" class="mt-4 font-semibold"></p>
+      <p id="note" class="text-sm text-[color:var(--color-muted)]">Press Calculate to see your price.</p>
+
+      <div id="buyBox" class="mt-6" hidden>
+      <label class="block text-sm font-semibold">Address to insure
+        <input id="address" type="text" placeholder="12 Main Street" class="mt-1 w-full border border-[color:var(--color-line)] px-3 py-2 font-normal" />
+      </label>
+      <button id="buyBtn" class="mt-4 w-full bg-[var(--color-marigold)] px-4 py-3 font-semibold text-[color:var(--color-ink)] hover:brightness-95 disabled:opacity-60">Buy this policy</button>
+      <p id="buyError" class="mt-2 text-sm text-red-700" role="alert"></p>
+    </div>
+    </aside>
+
+  </div>
+</section>
+    <!-- POLICIES SCREEN: a list of every policy the logged-in user has bought -->
+  <section id="panel-policies" hidden>
+  <h1 class="font-[family-name:var(--font-head)] text-4xl font-bold tracking-tight">Your policies</h1>
+  <p class="mt-2 text-[color:var(--color-muted)]">Every term below comes with a plain-words explanation. Hover over
+    <span class="term" tabindex="0" data-tip="You pay this part of any claim first. We pay the rest, up to your limit.">deductible</span>
+    to see one.</p>
+  <!-- Shown only when the user has no policies yet -->
+  <p id="policiesEmpty" class="mt-8 text-[color:var(--color-muted)]" hidden>
+    You have no policies yet. Get a quote and buy one, and it will appear here.
+  </p>
+
+  <!-- JavaScript fills this list with one <li> per policy -->
+  <ul id="policyList"></ul>
+
+  </section>
+  <!-- CLAIMS SCREEN: file a claim on one of your policies and see why it was paid or denied -->
+<section id="panel-claims" hidden>
+  <h1 class="font-[family-name:var(--font-head)] text-4xl font-bold tracking-tight">File a claim</h1>
+  <p class="mt-2 text-[color:var(--color-muted)]">Tell us what happened. We check the
+    <span class="term" tabindex="0" data-tip="The date the damage actually happened. It must fall inside your policy period.">loss date</span>,
+    the <span class="term" tabindex="0" data-tip="The cause of the loss, like fire, theft or collision.">peril</span>
+    and your <span class="term" tabindex="0" data-tip="Causes your policy never covers, such as flood or war.">exclusions</span>,
+    then show our working.</p>
+  <!-- Shown when the user has no policy to claim on -->
+  <p id="claimsNoPolicy" class="mt-8 text-[color:var(--color-muted)]" hidden>
+    You need a policy before you can file a claim. Get a quote and buy one first.
+  </p>
+
+  <div class="mt-8 grid gap-10 md:grid-cols-[420px_1fr]">
+
+    <!-- The claim form -->
+    <form id="claimForm" class="space-y-6">
+      <label class="block text-sm font-semibold">Which policy?
+        <select id="claimPolicy" class="mt-1 w-full border border-[color:var(--color-line)] bg-white px-3 py-2 font-normal"></select>
+      </label>
+
+      <label class="block text-sm font-semibold">Date of loss
+        <input id="lossDate" type="date" required class="mt-1 w-full border border-[color:var(--color-line)] bg-white px-3 py-2 font-normal" />
+      </label>
+
+      <label class="block text-sm font-semibold">What caused it?
+        <select id="peril" class="mt-1 w-full border border-[color:var(--color-line)] bg-white px-3 py-2 font-normal">
+          <option value="collision">Collision</option>
+          <option value="fire">Fire</option>
+          <option value="theft">Theft</option>
+          <option value="vandalism">Vandalism</option>
+          <option value="windstorm">Windstorm</option>
+          <option value="flood">Flood</option>
+        </select>
+      </label>
+
+      <label class="block text-sm font-semibold">Total loss amount ($)
+        <input id="amount" type="number" min="1" step="1" placeholder="5000" required class="mt-1 w-full border border-[color:var(--color-line)] bg-white px-3 py-2 font-normal" />
+      </label>
+
+      <button id="claimBtn" class="w-full bg-[var(--color-harbor)] px-4 py-3 font-semibold text-white hover:bg-[var(--color-ink)] disabled:opacity-60">File claim</button>
+      <p id="claimError" class="text-sm text-red-700" role="alert"></p>
+    </form>
+
+    <!-- The result: JavaScript fills this in after a claim is filed -->
+    <div id="claimResult" class="result self-start" aria-live="polite" hidden></div>
+
+  </div>
+
+     <!-- CLAIMS HISTORY: every claim the user has filed, newest first -->
+  <h2 class="mt-14 font-[family-name:var(--font-head)] text-2xl font-semibold">Your claims</h2>
+  <p id="claimsEmpty" class="mt-2 text-[color:var(--color-muted)]" hidden>No claims filed yet.</p>
+  <ul id="claimList"></ul>
+</section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
+

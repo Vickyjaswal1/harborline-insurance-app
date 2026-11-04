@@ -1,0 +1,329 @@
+.nav-tab {
+  flex: 1;
+  padding: 0.9rem 1.25rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  border-top: 3px solid transparent;
+}
+
+.nav-tab[aria-selected="true"] {
+  color: var(--color-ink);
+  border-top-color: var(--color-harbor);
+}
+
+@media (min-width: 768px) {
+  .nav-tab {
+    flex: none;
+    border-top: 0;
+    border-bottom: 3px solid transparent;
+  }
+  .nav-tab[aria-selected="true"] {
+    border-bottom-color: var(--color-harbor);
+  }
+}
+
+/* Quote panel css */
+
+.choice span {
+  display: block;
+  padding: 0.7rem 0;
+  text-align: center;
+  font-weight: 600;
+  background: #fff;
+  border: 1px solid var(--color-line);
+  cursor: pointer;
+}
+
+.choice input {
+  position: absolute;
+  opacity: 0;
+}
+
+.choice input:checked + span {
+  background: var(--color-harbor);
+  border-color: var(--color-harbor);
+  color: #fff;
+}
+
+.choice input:focus-visible + span {
+  outline: 3px solid var(--color-marigold);
+  outline-offset: 2px;
+}
+
+.receipt {
+  background: #fff;
+  padding: 1.75rem;
+  border-top: 4px solid var(--color-marigold);
+  font-variant-numeric: tabular-nums;
+}
+
+.receipt-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px dashed var(--color-line);
+}
+
+.receipt-total strong {
+  font-family: var(--font-head);
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+/* Calculate Button css */
+
+.factor {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.factor .up { color: var(--color-bad); }
+.factor .down { color: var(--color-ok); }
+
+#decision[data-decision="standard"] { color: var(--color-ok); }
+#decision[data-decision="non-standard"] { color: #9A6B00; }
+#decision[data-decision="decline"] { color: var(--color-bad); }
+
+
+
+/* One policy: a flat white block with a teal edge on the left */
+.policy {
+  background: #fff;
+  border-left: 4px solid var(--color-harbor);
+  padding: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+/* Top row: title, address and badges. Wraps onto new lines on narrow screens */
+.policy-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+}
+
+/* Small outlined tags like "active" and "Standard market" */
+.badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.1rem 0.6rem;
+  border: 1px solid var(--color-line);
+  color: var(--color-muted);
+}
+
+.badge-active {
+  color: var(--color-ok);
+  border-color: currentColor;
+}
+
+/* The facts grid: as many columns as fit, each at least 180px wide */
+.policy-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem 1.5rem;
+  margin-top: 1.25rem;
+}
+
+.fact-label { display: block; font-size: 0.85rem; color: var(--color-muted); }
+.fact-value { display: block; font-family: var(--font-head); font-size: 1.35rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fact-hint { display: block; font-size: 0.8rem; color: var(--color-muted); margin-top: 0.15rem; }
+
+
+/* The claim result: a flat block whose left edge shows the outcome */
+.result {
+  background: #fff;
+  padding: 1.75rem;
+  border-left: 6px solid var(--color-line);
+  font-variant-numeric: tabular-nums;
+}
+
+.result[data-status="approved"] { border-left-color: var(--color-ok); }
+.result[data-status="denied"]   { border-left-color: var(--color-bad); }
+
+.result-title {
+  font-family: var(--font-head);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.result[data-status="approved"] .result-title { color: var(--color-ok); }
+.result[data-status="denied"]   .result-title { color: var(--color-bad); }
+
+
+/* One row in the claims history: a flat white block */
+.claim-row {
+  background: #fff;
+  border-left: 4px solid var(--color-line);
+  padding: 1rem 1.25rem;
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr auto;   /* details on the left, payout on the right */
+  gap: 0.25rem 1rem;
+  align-items: baseline;
+}
+
+/* The left edge shows the outcome, the same idea as the result block */
+.claim-row[data-status="approved"] { border-left-color: var(--color-ok); }
+.claim-row[data-status="denied"]   { border-left-color: var(--color-bad); }
+
+.claim-payout {
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.badge-approved { color: var(--color-ok);  border-color: currentColor; }
+.badge-denied   { color: var(--color-bad); border-color: currentColor; }
+
+
+/* JARGON TOOLTIP: a word with a dotted underline that explains itself on hover or focus */
+.term {
+  position: relative;               /* lets the tooltip position itself relative to the word */
+  border-bottom: 1px dotted currentColor;
+  cursor: help;
+}
+
+/* The tooltip bubble. Its text comes from the data-tip attribute in the HTML. */
+.term::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);         /* sits just above the word */
+  width: max-content;
+  max-width: 240px;
+  padding: 0.5rem 0.7rem;
+  background: var(--color-ink);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: left;
+  opacity: 0;                       /* hidden until hover or focus */
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.15s, transform 0.15s;
+  z-index: 20;
+}
+
+/* Show the bubble on mouse hover, and on keyboard focus or phone tap (tabindex makes it focusable) */
+.term:hover::after,
+.term:focus::after {
+  opacity: 1;
+  transform: none;
+}
+
+/* Respect people who ask their device to reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .term::after { transition: none; }
+}
+
+
+/* Cancelled policies: grey edge and a red badge */
+.policy[data-status="cancelled"] { border-left-color: var(--color-line); }
+.badge-cancelled { color: var(--color-bad); border-color: currentColor; }
+
+/* The cancel button: quiet outline, so it never competes with the main actions */
+.cancel-btn {
+  margin-top: 1.25rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: var(--color-bad);
+  border: 1px solid var(--color-bad);
+  background: transparent;
+}
+.cancel-btn:hover { background: var(--color-bad); color: #fff; }
+
+/* Frosted glass: the receipt, policy blocks, claim result and history rows
+   become slightly see-through, so the drifting colours glow through them. */
+.receipt,
+.policy,
+.result,
+.claim-row {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(12px);
+}
+
+/* ===== APP MOTION ===== */
+
+/* Receipt lines slide in one by one. --i is each line's position (0, 1, 2...),
+   set from JavaScript, so every line waits 70ms longer than the one before it. */
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.factor {
+  animation: slide-in 0.35s ease both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* Each tab panel fades in whenever it becomes visible (when "hidden" is removed) */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+#panel-quote:not([hidden]),
+#panel-policies:not([hidden]),
+#panel-claims:not([hidden]) {
+  animation: fade-in 0.3s ease both;
+}
+
+/* Buttons: smooth colour change, and a tiny press-down when clicked */
+button {
+  transition: background-color 0.2s, color 0.2s, transform 0.1s;
+}
+button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+/* Reduced motion: no movement for anyone who asked their device for it */
+@media (prefers-reduced-motion: reduce) {
+  .factor,
+  #panel-quote:not([hidden]),
+  #panel-policies:not([hidden]),
+  #panel-claims:not([hidden]) {
+    animation: none;
+  }
+  button { transition: none; }
+}
+
+/* ===== APP HOVER EFFECTS ===== */
+
+/* Blocks gently lift when the cursor is over them */
+.receipt,
+.policy,
+.claim-row {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .receipt:hover,
+  .policy:hover,
+  .claim-row:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(16, 35, 43, 0.12);
+  }
+}
+
+/* Parking options: teal border on hover (the selected one is already solid teal) */
+.choice span {
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.choice:hover input:not(:checked) + span {
+  border-color: var(--color-harbor);
+}
+
+/* Navigation tabs: text darkens on hover */
+.nav-tab {
+  transition: color 0.2s;
+}
+.nav-tab:hover {
+  color: var(--color-ink);
+}

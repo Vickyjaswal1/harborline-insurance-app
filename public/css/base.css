@@ -1,0 +1,163 @@
+:root {
+  --color-ink: #10232B;
+  --color-paper: #F4F7F8;
+  --color-line: #D5DEE2;
+  --color-muted: #5C6F77;
+  --color-harbor: #0F5C6E;
+  --color-marigold: #F2B632;
+  --font-head: "Bricolage Grotesque", sans-serif;
+  --font-body: "Figtree", sans-serif;
+  --color-ok: #2F8F6B;
+  --color-bad: #D6493A;
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-marigold);
+  outline-offset: 2px;
+}
+
+/* ===== MOVING BACKGROUND =====
+   A fixed layer behind the whole page, holding three soft drifting colour shapes ("orbs"). */
+.bg-scene {
+  position: fixed;
+  inset: 0;              /* stretch to cover the whole screen */
+  z-index: -1;           /* sit behind everything else */
+  overflow: hidden;      /* orbs never cause a scrollbar */
+  pointer-events: none;  /* clicks pass straight through to the page */
+}
+
+/* Each orb is a big circle, blurred into a soft glow, drifting slowly back and forth */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.55;
+  animation: drift 24s ease-in-out infinite alternate; /* "alternate" = glide there and back */
+}
+
+/* Light teal glow, top left */
+.orb-1 {
+  width: 42vmax; height: 42vmax;
+  background: #8FD0DB;
+  top: -14vmax; left: -10vmax;
+}
+
+/* Warm marigold glow, right side. A different speed and start point keeps it from looking mechanical */
+.orb-2 {
+  width: 34vmax; height: 34vmax;
+  background: #F6D98A;
+  top: 18vh; right: -12vmax;
+  animation-duration: 30s;
+  animation-delay: -8s;  /* negative delay = starts partway through the animation */
+}
+
+/* Deep harbor glow, bottom. Fainter, to add depth without darkening the page */
+.orb-3 {
+  width: 38vmax; height: 38vmax;
+  background: var(--color-harbor);
+  opacity: 0.22;
+  bottom: -20vmax; left: 28%;
+  animation-duration: 36s;
+  animation-delay: -15s;
+}
+
+/* The movement itself: slide a little and grow slightly */
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(7vmax, 5vmax) scale(1.18); }
+}
+
+/* Phones: a smaller blur is lighter on the battery and the graphics chip */
+@media (max-width: 768px) {
+  .orb { filter: blur(50px); }
+}
+
+/* Anyone who asked their device to reduce motion gets a still background */
+@media (prefers-reduced-motion: reduce) {
+  .orb { animation: none; }
+}
+
+/* ===== ENTRANCE ANIMATION =====
+   Elements with class "rise" ease up and fade in once when the page loads.
+   --d is a delay set per element, so they appear one after another. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.rise {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; /* "both" keeps the start state during the delay */
+  animation-delay: var(--d, 0s);
+}
+
+/* Reduced motion: show everything immediately */
+@media (prefers-reduced-motion: reduce) {
+  .rise { animation: none; }
+}
+
+
+
+
+/* ===== GENTLE WAVES =====
+   Each wave is a strip along the bottom of the screen. Its background is a tiny
+   wave-shaped SVG picture that repeats sideways. Sliding the picture sideways
+   forever makes the wave look like it is flowing. */
+.wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 130px;
+  background-repeat: repeat-x;
+  background-size: 1200px 100%;   /* one wave picture is 1200px wide, then it repeats */
+}
+
+/* Back wave: deeper teal, slow, flows to the right */
+.wave-1 {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 60 Q300 0 600 60 T1200 60 V120 H0 Z' fill='%230F5C6E' fill-opacity='0.10'/%3E%3C/svg%3E");
+  animation: wave-right 26s linear infinite;
+}
+
+/* Front wave: warm marigold, a little shorter and faster, flows the other way */
+.wave-2 {
+  height: 100px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 60 Q300 0 600 60 T1200 60 V120 H0 Z' fill='%23F2B632' fill-opacity='0.13'/%3E%3C/svg%3E");
+  animation: wave-left 19s linear infinite;
+}
+
+/* Slide the repeating picture exactly one full width, so the loop never jumps */
+@keyframes wave-right {
+  from { background-position-x: 0; }
+  to   { background-position-x: 1200px; }
+}
+@keyframes wave-left {
+  from { background-position-x: 0; }
+  to   { background-position-x: -1200px; }
+}
+
+/* Reduced motion: the waves stay still */
+@media (prefers-reduced-motion: reduce) {
+  .wave { animation: none; }
+}
+
+/* ===== BUTTON HOVER (shared by both pages) =====
+   "button:not(:disabled)" is more specific than the plain "button" rule in app.css,
+   so this transition (which also animates the shadow) wins. */
+button:not(:disabled) {
+  transition: background-color 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+/* Only on devices with a real mouse, and only if motion is allowed */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  /* Buttons rise slightly and gain a soft shadow */
+  button:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(16, 35, 43, 0.18);
+  }
+}
